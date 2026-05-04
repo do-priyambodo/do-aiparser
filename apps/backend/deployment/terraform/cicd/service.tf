@@ -198,5 +198,6 @@ resource "google_cloud_run_v2_service" "app" {
     google_project_service.deploy_project_services,
     google_sql_user.db_user,
     google_secret_manager_secret_version.db_password,
+    google_project_iam_member.app_sa_roles,
   ]
 }
