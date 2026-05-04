@@ -54,30 +54,22 @@ AGENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 session_service_uri = None
 artifact_service_uri = f"gs://{logs_bucket_name}" if logs_bucket_name else None
 
-# Initialize standard ADK FastAPI wrapper application
-app: FastAPI = get_fast_api_app(
-    agents_dir=AGENT_DIR,
-    web=False,
-    artifact_service_uri=artifact_service_uri,
-    allow_origins=allow_origins if allow_origins != ["*"] else None,
-    session_service_uri=session_service_uri,
-    otel_to_cloud=True,
+# Initialize native standard vanilla FastAPI application instance
+app = FastAPI(
+    title="do-aiparser",
+    description="High-Fidelity Document Understanding & Structured Parsing Service via Google ADK & FastAPI"
 )
 
-
-app.title = "do-aiparser"
-app.description = (
-    "High-Fidelity Document Understanding & Structured Parsing Service via Google ADK"
-)
 
 # 🔌 Wire up robust CORSMiddleware for sandbox/cross-origin browser client access
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"] if allow_origins == ["*"] else allow_origins,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 
 from fastapi import Request
