@@ -76,7 +76,9 @@ jobs:
           uvx google-agents-cli deploy \
             --project ${{ vars.STAGING_PROJECT_ID }} \
             --region ${{ vars.REGION }} \
-            --image ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/${{ vars.CONTAINER_NAME }}:${{ github.sha }}
+            --image ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/${{ vars.CONTAINER_NAME }}:${{ github.sha }} \
+            --update-env-vars ALLOW_ORIGINS="*"
+
 
       - name: Fetch Staging Service URL
         id: fetch-url
