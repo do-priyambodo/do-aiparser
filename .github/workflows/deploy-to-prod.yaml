@@ -87,3 +87,27 @@ jobs:
             --region ${{ vars.REGION }} \
             --image ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/${{ vars.CONTAINER_NAME }}:${{ github.sha }}
 
+      - name: Fetch Production Backend URL
+        id: fetch-url-prod
+        run: |
+          _PROD_URL=$(gcloud run services describe backend \
+            --region ${{ vars.REGION }} --project ${{ vars.PROD_PROJECT_ID }} --format="value(status.url)")
+          echo "_prod_url=${_PROD_URL}" >> $GITHUB_OUTPUT
+
+      - name: Build and Push Frontend Docker Image (Production)
+        run: |
+          docker build -t ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend-prod:${{ github.sha }} \
+            --build-arg NEXT_PUBLIC_BACKEND_URL=${{ steps.fetch-url-prod.outputs._prod_url }} \
+            -f apps/frontend/Dockerfile \
+            apps/frontend
+          docker push ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend-prod:${{ github.sha }}
+
+      - name: Deploy Frontend to Production (Cloud Run)
+        run: |
+          gcloud beta run deploy do-aiparser-frontend-prod \
+            --project ${{ vars.PROD_PROJECT_ID }} \
+            --region ${{ vars.REGION }} \
+            --image ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend-prod:${{ github.sha }} \
+            --allow-unauthenticated
+
+

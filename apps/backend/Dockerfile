@@ -22,7 +22,9 @@ COPY ./pyproject.toml ./README.md ./uv.lock* ./
 
 COPY ./app ./app
 
-RUN uv sync --frozen
+ENV UV_INDEX_URL=https://pypi.org/simple
+RUN rm -f uv.lock && uv sync
+
 
 ARG COMMIT_SHA=""
 ENV COMMIT_SHA=${COMMIT_SHA}

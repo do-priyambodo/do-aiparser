@@ -139,8 +139,11 @@ export default function Home() {
 
       // Connect to standard backend server port mapped in environment
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL 
-        ? `http://${process.env.NEXT_PUBLIC_BACKEND_URL}` 
+        ? (process.env.NEXT_PUBLIC_BACKEND_URL.startsWith("http") 
+            ? process.env.NEXT_PUBLIC_BACKEND_URL 
+            : `https://${process.env.NEXT_PUBLIC_BACKEND_URL}`) 
         : "http://localhost:8000";
+
         
       const res = await fetch(`${backendUrl}/api/extract`, {
         method: "POST",

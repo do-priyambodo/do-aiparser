@@ -115,6 +115,23 @@ jobs:
           echo "HTTP link: https://console.cloud.google.com/storage/browser/${{ vars.LOGS_BUCKET_NAME_STAGING }}/load-test-results/results-${TIMESTAMP}"
           echo "_________________________________________________________________________"
 
+      - name: Build and Push Frontend Docker Image
+        run: |
+          docker build -t ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend:${{ github.sha }} \
+            --build-arg NEXT_PUBLIC_BACKEND_URL=${{ steps.fetch-url.outputs._staging_url }} \
+            -f apps/frontend/Dockerfile \
+            apps/frontend
+          docker push ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend:${{ github.sha }}
+
+      - name: Deploy Frontend to Staging (Cloud Run)
+        run: |
+          gcloud beta run deploy do-aiparser-frontend-staging \
+            --project ${{ vars.STAGING_PROJECT_ID }} \
+            --region ${{ vars.REGION }} \
+            --image ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend:${{ github.sha }} \
+            --allow-unauthenticated
+
+
   call_production_workflow:
     needs: deploy_and_test_staging
     uses: ./.github/workflows/deploy-to-prod.yaml
