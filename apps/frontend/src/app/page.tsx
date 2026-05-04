@@ -138,11 +138,18 @@ export default function Home() {
       }
 
       // Connect to standard backend server port mapped in environment
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL 
-        ? (process.env.NEXT_PUBLIC_BACKEND_URL.startsWith("http") 
-            ? process.env.NEXT_PUBLIC_BACKEND_URL 
-            : `https://${process.env.NEXT_PUBLIC_BACKEND_URL}`) 
-        : "http://localhost:8000";
+      let backendUrl = "http://localhost:8000";
+      if (typeof window !== "undefined") {
+        const currentOrigin = window.location.origin;
+        if (currentOrigin.includes("-frontend")) {
+          backendUrl = currentOrigin.replace("-frontend", "");
+        } else if (process.env.NEXT_PUBLIC_BACKEND_URL) {
+          backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL.startsWith("http")
+            ? process.env.NEXT_PUBLIC_BACKEND_URL
+            : `https://${process.env.NEXT_PUBLIC_BACKEND_URL}`;
+        }
+      }
+
 
         
       const res = await fetch(`${backendUrl}/api/extract`, {
