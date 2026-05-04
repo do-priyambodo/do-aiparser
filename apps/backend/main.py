@@ -1,5 +1,6 @@
 def main():
-    print("Hello from docompare!")
+    print("Hello from do-aiparser!")
+
 
 
 if __name__ == "__main__":

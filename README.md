@@ -26,10 +26,11 @@ graph TD
 
 The services are fully containerized and live-deployed on **Google Cloud Run** via automated GitHub Actions monorepo orchestration pipelines. You can access the public environments directly:
 
-* **Frontend Web App**: [https://docompare-frontend-388889235558.us-central1.run.app](https://docompare-frontend-388889235558.us-central1.run.app) — Elegant Apple-style droppable dashboard to upload invoices and interactively view color-coded JSON schemas.
-* **Backend ADK-Web**: [https://docompare-388889235558.us-central1.run.app/dev-ui/?app=app](https://docompare-388889235558.us-central1.run.app/dev-ui/?app=app) — Interactive Google ADK web console reasoning playground to chat with your agent and test dynamic prompts natively.
+* **Frontend Web App**: [https://do-aiparser-frontend-388889235558.us-central1.run.app](https://do-aiparser-frontend-388889235558.us-central1.run.app) — Elegant Apple-style droppable dashboard to upload invoices and interactively view color-coded JSON schemas.
+* **Backend ADK-Web**: [https://do-aiparser-388889235558.us-central1.run.app/dev-ui/?app=app](https://do-aiparser-388889235558.us-central1.run.app/dev-ui/?app=app) — Interactive Google ADK web console reasoning playground to chat with your agent and test dynamic prompts natively.
 
 ---
+
 
 
 ## 🛠️ Local Development & Command Reference

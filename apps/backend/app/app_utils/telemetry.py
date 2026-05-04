@@ -36,8 +36,9 @@ def setup_telemetry() -> str | None:
         commit_sha = os.environ.get("COMMIT_SHA", "dev")
         os.environ.setdefault(
             "OTEL_RESOURCE_ATTRIBUTES",
-            f"service.namespace=docompare,service.version={commit_sha}",
+            f"service.namespace=do-aiparser,service.version={commit_sha}",
         )
+
         path = os.environ.get("GENAI_TELEMETRY_PATH", "completions")
         os.environ.setdefault(
             "OTEL_INSTRUMENTATION_GENAI_UPLOAD_BASE_PATH",

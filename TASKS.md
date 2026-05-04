@@ -18,14 +18,14 @@ This file acts as our live sprint backlog and implementation tracker. Use this t
 ## 🤖 Phase 2: Backend ADK Agent Development
 - [x] **Task 2.1**: Read and integrate the `google-agents-cli-adk-code` best practice guide.
 - [x] **Task 2.2**: Install ADK dependencies in `apps/backend/pyproject.toml`.
-- [x] **Task 2.3**: Create `apps/backend/src/docompare/agent.py` to define the Gemini receipt understanding agent, system instructions, and structured schemas.
+- [x] **Task 2.3**: Create `apps/backend/src/do-aiparser/agent.py` to define the Gemini receipt understanding agent, system instructions, and structured schemas.
 - [x] **Task 2.4**: Implement dynamic schema injection into the ADK agent prompt to enable user-defined custom extra fields.
 - [x] **Task 2.5**: Write an isolated local python script to test the ADK agent with a static mock receipt image.
 
 ---
 
 ## 🔌 Phase 3: FastAPI Server & API Route Wiring
-- [x] **Task 3.1**: Create main FastAPI entry point `apps/backend/src/docompare/main.py`.
+- [x] **Task 3.1**: Create main FastAPI entry point `apps/backend/src/do-aiparser/main.py`.
 - [x] **Task 3.2**: Implement `multipart/form-data` file upload handler to receive images/PDFs securely.
 - [x] **Task 3.3**: Wire up the `/api/extract` route to invoke the ADK agent, pipe the uploaded file bytes/stream, and capture the structured JSON output.
 - [x] **Task 3.4**: Add robust CORS middleware to allow seamless calls from `http://localhost:3000`.
