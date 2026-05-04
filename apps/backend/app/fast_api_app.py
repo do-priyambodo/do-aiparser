@@ -114,8 +114,8 @@ async def extract_receipt(
 
         # 🔌 High-Performance Locust Load Test Interceptor Short-Circuit
         if file.filename == "load_test_receipt.png":
-            import uuid
             mock_extraction = {
+
                 "merchant": {"name": "Locust Stress Corp", "address": "123 LoadTest Blvd, Silicon Valley, CA", "phone": "(555) 999-LOAD"},
                 "transaction": {"date": datetime.datetime.utcnow().strftime("%Y-%m-%d"), "time": "12:00:00", "invoice_number": "INV-LT-2026"},
                 "financials": {"currency": "USD", "subtotal": 100.00, "tax_amount": 8.25, "service_charge": 0.00, "total_amount": 108.25},
