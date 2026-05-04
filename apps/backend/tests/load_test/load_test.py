@@ -15,12 +15,7 @@
 import json
 import logging
 import os
-import time
-import uuid
-
 from locust import HttpUser, between, task
-
-ENDPOINT = "/run_sse"
 
 # Configure logging
 logging.basicConfig(
@@ -29,102 +24,52 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-class ChatStreamUser(HttpUser):
-    """Simulates a user interacting with the chat stream API."""
+class AiParserLoadUser(HttpUser):
+    """Simulates corporate clients stress-testing the custom do-aiparser /api/extract endpoint."""
 
-    wait_time = between(1, 3)  # Wait 1-3 seconds between tasks
+    wait_time = between(1, 2)  # Wait 1-2 seconds between task hits
 
     @task
-    def chat_stream(self) -> None:
-        """Simulates a chat stream interaction."""
-        headers = {"Content-Type": "application/json"}
+    def extract_document(self) -> None:
+        """Simulates a multipart form document parsing upload request."""
+        # Generate standard dummy receipt png byte stream for high-concurrency tests
+        fake_receipt_png = b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15c\xbb\x00\x00\x00\nIDATx\x9cc`\x00\x00\x00\x02\x00\x01H\xaf\xa4q\x00\x00\x00\x00IEND\xaeB`\x82"
+        
+        files = {
+            "file": ("load_test_receipt.png", fake_receipt_png, "image/png")
+        }
+        
+        data = {
+            "custom_fields": json.dumps({
+                "expense_category": "Determine category for corporate compliance tracing.",
+                "is_business_expense": "True/False check."
+            })
+        }
+        
+        headers = {}
         if os.environ.get("_ID_TOKEN"):
             headers["Authorization"] = f"Bearer {os.environ['_ID_TOKEN']}"
-        # Create session first
-        user_id = f"user_{uuid.uuid4()}"
-        session_data = {"state": {"preferred_language": "English", "visit_count": 1}}
 
-        session_response = self.client.post(
-            f"/apps/app/users/{user_id}/sessions",
-            headers=headers,
-            json=session_data,
-        )
-
-        # Get session_id from response
-        session_id = session_response.json()["id"]
-
-        # Send chat message
-        data = {
-            "app_name": "app",
-            "user_id": user_id,
-            "session_id": session_id,
-            "new_message": {
-                "role": "user",
-                "parts": [{"text": "Hello! Weather in New york?"}],
-            },
-            "streaming": True,
-        }
-        start_time = time.time()
-
+        # POST to our actual, custom FastAPI document understanding route surface
         with self.client.post(
-            ENDPOINT,
-            name=f"{ENDPOINT} message",
+            "/api/extract",
             headers=headers,
-            json=data,
-            catch_response=True,
-            stream=True,
-            params={"alt": "sse"},
+            files=files,
+            data=data,
+            catch_response=True
         ) as response:
             if response.status_code == 200:
-                events = []
-                has_error = False
-                for line in response.iter_lines():
-                    if line:
-                        line_str = line.decode("utf-8")
-                        events.append(line_str)
-
-                        if "429 Too Many Requests" in line_str:
-                            self.environment.events.request.fire(
-                                request_type="POST",
-                                name=f"{ENDPOINT} rate_limited 429s",
-                                response_time=0,
-                                response_length=len(line),
-                                response=response,
-                                context={},
-                            )
-
-                        # Check for error responses in the JSON payload
-                        try:
-                            event_data = json.loads(line_str)
-                            if isinstance(event_data, dict) and "code" in event_data:
-                                # Flag any non-2xx codes as errors
-                                if event_data["code"] >= 400:
-                                    has_error = True
-                                    error_msg = event_data.get(
-                                        "message", "Unknown error"
-                                    )
-                                    response.failure(f"Error in response: {error_msg}")
-                                    logger.error(
-                                        "Received error response: code=%s, message=%s",
-                                        event_data["code"],
-                                        error_msg,
-                                    )
-                        except json.JSONDecodeError:
-                            # If it's not valid JSON, continue processing
-                            pass
-
-                end_time = time.time()
-                total_time = end_time - start_time
-
-                # Only fire success event if no errors were found
-                if not has_error:
-                    self.environment.events.request.fire(
-                        request_type="POST",
-                        name=f"{ENDPOINT} end",
-                        response_time=total_time * 1000,  # Convert to milliseconds
-                        response_length=len(events),
-                        response=response,
-                        context={},
-                    )
+                try:
+                    res_json = response.json()
+                    if res_json.get("success") is True:
+                        response.success()
+                    else:
+                        response.failure(f"API response success is False: {res_json.get('error', 'Unknown')}")
+                except Exception as e:
+                    response.failure(f"Failed to parse response JSON: {str(e)}")
+            elif response.status_code == 422:
+                response.failure(f"Unprocessable entity, check multi-part boundaries: {response.text}")
+            elif response.status_code == 403:
+                response.failure(f"Forbidden, authentication or CORS middleware block: {response.text}")
             else:
-                response.failure(f"Unexpected status code: {response.status_code}")
+                response.failure(f"Server returned unexpected HTTP status code: {response.status_code}")
