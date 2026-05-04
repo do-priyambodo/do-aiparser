@@ -26,8 +26,9 @@ graph TD
 
 The services are fully containerized and live-deployed on **Google Cloud Run** via automated GitHub Actions monorepo orchestration pipelines. You can access the public environments directly:
 
-* **Frontend Web App**: [https://do-aiparser-frontend-388889235558.us-central1.run.app](https://do-aiparser-frontend-388889235558.us-central1.run.app) — Elegant Apple-style droppable dashboard to upload invoices and interactively view color-coded JSON schemas.
-* **Backend ADK-Web**: [https://do-aiparser-388889235558.us-central1.run.app/dev-ui/?app=app](https://do-aiparser-388889235558.us-central1.run.app/dev-ui/?app=app) — Interactive Google ADK web console reasoning playground to chat with your agent and test dynamic prompts natively.
+* **Production Frontend Web App**: [https://do-aiparser-frontend-prod-388889235558.us-central1.run.app](https://do-aiparser-frontend-prod-388889235558.us-central1.run.app) — Premium Apple-style droppable metadata client dashboard interface (Version `v2.0.0`).
+* **Production Backend REST API Docs**: [https://do-aiparser-388889235558.us-central1.run.app/docs](https://do-aiparser-388889235558.us-central1.run.app/docs) — OpenAPI Swagger interface detailing schema types and endpoints for remote corporate JSON integrations.
+
 
 ---
 
