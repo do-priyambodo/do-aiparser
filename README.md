@@ -22,7 +22,21 @@ graph TD
 
 ---
 
+## 🚀 Production Live Testing Links
+
+The services are fully containerized and live-deployed on **Google Cloud Run** via automated GitHub Actions monorepo orchestration pipelines. You can access the public environments directly:
+
+> [!NOTE]
+> **Yes! The Backend API is fully testable by you/users directly!** We have attached a public invoker policy to the Cloud Run instance so you can query the endpoints directly in bash via `curl`, or use the interactive web playground documentation.
+
+* **Frontend Dashboard UI**: [https://docompare-frontend-388889235558.us-central1.run.app](https://docompare-frontend-388889235558.us-central1.run.app) — Elegant Apple-style droppable dashboard to upload invoices and interactively view color-coded JSON schemas.
+* **Backend API Endpoint**: `POST` [https://docompare-388889235558.us-central1.run.app/api/extract](https://docompare-388889235558.us-central1.run.app/api/extract) — The primary `multipart/form-data` route that parses documents and maps dynamic user tags in-process.
+* **Backend ADK Web Console (Swagger UI)**: [https://docompare-388889235558.us-central1.run.app/docs](https://docompare-388889235558.us-central1.run.app/docs) — Interactive web playground documentation to inspect full schema JSON specifications and trigger test requests natively from your browser.
+
+---
+
 ## 🛠️ Local Development & Command Reference
+
 
 ### 1. 🤖 Backend Development (`apps/backend/`)
 Before launching, configure your GCP credentials and environment settings inside `.env.local`.
