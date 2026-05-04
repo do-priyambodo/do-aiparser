@@ -6,7 +6,6 @@ coverage/
 *.log
 .env*
 !.env.example
-!.env.confidential
 
 # Python
 __pycache__/
