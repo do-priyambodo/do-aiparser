@@ -53,9 +53,9 @@ This file acts as our live sprint backlog and implementation tracker. Use this t
 ---
 
 ## 🚀 Phase 6: Google Cloud Run Production Deployment
-- [ ] **Task 6.1**: Run `agents-cli scaffold enhance . --deployment-target cloudrun` to inject custom `deployment/` Terraform configurations and Dockerfile manifests.
-- [ ] **Task 6.2**: Activate required Google Cloud APIs and create secure encrypted slots in Google Secret Manager for keys.
-- [ ] **Task 6.3**: Configure Workload Identity Federation (WIF) OIDC token pools between GitHub Actions and GCP IAM accounts.
+- [x] **Task 6.1**: Run `agents-cli scaffold enhance . --deployment-target cloudrun` to inject custom `deployment/` Terraform configurations and Dockerfile manifests.
+- [x] **Task 6.2**: Activate required Google Cloud APIs and create secure encrypted slots in Google Secret Manager for keys.
+- [x] **Task 6.3**: Configure Workload Identity Federation (WIF) OIDC token pools between GitHub Actions and GCP IAM accounts.
 - [ ] **Task 6.4**: Execute `agents-cli deploy` to perform automated Cloud Build containerization and spin up the services.
 - [ ] **Task 6.5**: Run end-to-end live validation using `agents-cli run --url <service-url>` to verify 100% remote production runtime health.
 
