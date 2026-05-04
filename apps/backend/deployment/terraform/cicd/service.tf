@@ -80,7 +80,7 @@ resource "google_secret_manager_secret" "db_password" {
   for_each = local.deploy_project_ids
 
   project   = local.deploy_project_ids[each.key]
-  secret_id = "${var.project_name}-db-password"
+  secret_id = "${var.project_name}-db-password-${each.key}"
 
   replication {
     auto {}
@@ -99,7 +99,7 @@ resource "google_secret_manager_secret_version" "db_password" {
 resource "google_cloud_run_v2_service" "app" {
   for_each = local.deploy_project_ids
 
-  name                = var.project_name
+  name                = "${var.project_name}-${each.key}"
   location            = var.region
   project             = each.value
   deletion_protection = false

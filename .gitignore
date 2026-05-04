@@ -6,6 +6,13 @@ coverage/
 *.log
 .env*
 !.env.example
+ 
+# Terraform
+.terraform/
+**/.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
 
 # Python
 __pycache__/
