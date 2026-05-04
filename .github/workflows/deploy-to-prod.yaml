@@ -91,10 +91,10 @@ jobs:
 
       - name: Fetch Production Backend URL
         id: fetch-url-prod
-        run: |
-          _PROD_URL=$(gcloud run services describe backend \
+          _PROD_URL=$(gcloud run services describe do-aiparser \
             --region ${{ vars.REGION }} --project ${{ vars.PROD_PROJECT_ID }} --format="value(status.url)")
           echo "_prod_url=${_PROD_URL}" >> $GITHUB_OUTPUT
+
 
       - name: Build and Push Frontend Docker Image (Production)
         run: |
