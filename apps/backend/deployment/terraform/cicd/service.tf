@@ -201,3 +201,80 @@ resource "google_cloud_run_v2_service" "app" {
     google_project_iam_member.app_sa_roles,
   ]
 }
+
+# Cloud Run service for the Next.js Frontend application
+resource "google_cloud_run_v2_service" "frontend" {
+  for_each = local.deploy_project_ids
+
+  name                = "${var.project_name}-frontend-${each.key}"
+  location            = var.region
+  project             = each.value
+  deletion_protection = false
+  ingress             = "INGRESS_TRAFFIC_ALL"
+  labels = {
+    "created-by"                  = "adk"
+  }
+
+  template {
+    containers {
+      # Placeholder hello-world container image, to be replaced by CI/CD
+      image = "us-docker.pkg.dev/cloudrun/container/hello"
+      resources {
+        limits = {
+          cpu    = "2"
+          memory = "4Gi"
+        }
+        cpu_idle = true
+      }
+      ports {
+        container_port = 3000
+        name           = "http1"
+      }
+
+      # Environment variables for frontend to contact backend URL dynamically
+      env {
+        name  = "NEXT_PUBLIC_BACKEND_URL"
+        value = replace(google_cloud_run_v2_service.app[each.key].uri, "https://", "")
+      }
+      env {
+        name  = "NODE_ENV"
+        value = "production"
+      }
+    }
+
+    max_instance_request_concurrency = 80
+
+    scaling {
+      min_instance_count = 0
+      max_instance_count = 10
+    }
+  }
+
+  traffic {
+    type    = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+    percent = 100
+  }
+
+  lifecycle {
+    ignore_changes = [
+      template[0].containers[0].image,
+    ]
+  }
+
+  depends_on = [
+    google_project_service.deploy_project_services,
+    google_cloud_run_v2_service.app,
+  ]
+}
+
+# Expose Frontend publicly by granting allUsers run.invoker role
+resource "google_cloud_run_v2_service_iam_member" "frontend_public_access" {
+  for_each = local.deploy_project_ids
+
+  project  = each.value
+  location = var.region
+  name     = google_cloud_run_v2_service.frontend[each.key].name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
+

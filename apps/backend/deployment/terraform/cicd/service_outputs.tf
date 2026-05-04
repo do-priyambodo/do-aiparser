@@ -13,8 +13,13 @@
 # limitations under the License.
 
 output "cloud_run_service_urls" {
-  description = "Cloud Run service URLs by environment"
+  description = "Backend Cloud Run service URLs by environment"
   value       = { for k, v in google_cloud_run_v2_service.app : k => v.uri }
+}
+
+output "frontend_cloud_run_service_urls" {
+  description = "Frontend Next.js Cloud Run service URLs by environment"
+  value       = { for k, v in google_cloud_run_v2_service.frontend : k => v.uri }
 }
 
 output "cloud_run_service_names" {
