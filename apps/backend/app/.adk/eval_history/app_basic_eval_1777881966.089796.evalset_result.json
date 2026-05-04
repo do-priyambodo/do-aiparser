@@ -1,0 +1,368 @@
+{
+  "eval_set_result_id": "app_basic_eval_1777881966.089796",
+  "eval_set_result_name": "app_basic_eval_1777881966.089796",
+  "eval_set_id": "basic_eval",
+  "eval_case_results": [
+    {
+      "eval_set_file": "basic_eval",
+      "eval_set_id": "basic_eval",
+      "eval_id": "weather_query",
+      "final_eval_status": 3,
+      "eval_metric_results": null,
+      "overall_eval_metric_results": [
+        {
+          "metric_name": "rubric_based_final_response_quality_v1",
+          "threshold": 0.8,
+          "criterion": {
+            "threshold": 0.8,
+            "judgeModelOptions": {
+              "judgeModel": "gemini-flash-latest",
+              "numSamples": 1
+            },
+            "rubrics": [
+              {
+                "rubricId": "relevance",
+                "rubricContent": {
+                  "textProperty": "The response directly addresses the user's query."
+                }
+              },
+              {
+                "rubricId": "helpfulness",
+                "rubricContent": {
+                  "textProperty": "The response is helpful and provides useful information."
+                }
+              }
+            ]
+          },
+          "custom_function_path": null,
+          "score": null,
+          "eval_status": 3,
+          "details": {
+            "rubric_scores": null
+          }
+        }
+      ],
+      "eval_metric_result_per_invocation": [
+        {
+          "actual_invocation": {
+            "invocation_id": "e-860a8e12-be7c-437d-b23b-d775d4b35254",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "What's the weather like in San Francisco?",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null,
+                  "part_metadata": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "{\n  \"merchant\": {\n    \"name\": \"N/A\"\n  },\n  \"transaction\": {\n    \"date\": null,\n    \"time\": null,\n    \"invoice_number\": null\n  },\n  \"financials\": {\n    \"currency\": \"N/A\",\n    \"subtotal\": 0.0,\n    \"tax_amount\": 0.0,\n    \"service_charge\": null,\n    \"discount\": null,\n    \"total_amount\": 0.0\n  },\n  \"payment\": {\n    \"method\": null,\n    \"card_last_4\": null\n  },\n  \"line_items\": [],\n  \"custom_extra_fields\": {}\n}",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null,
+                  "part_metadata": null
+                }
+              ],
+              "role": "model"
+            },
+            "intermediate_data": {
+              "invocation_events": []
+            },
+            "creation_timestamp": 1777881963.9045482,
+            "rubrics": null,
+            "app_details": {
+              "agent_details": {
+                "receipt_extractor_agent": {
+                  "name": "receipt_extractor_agent",
+                  "instructions": "\nYou are a world-class AI receipt parsing specialist and document understanding expert.\nYour sole responsibility is to analyze the provided multimodal file (image or PDF) representing a customer invoice, receipt, bill, or voucher, and extract all data into the strict target JSON schema.\n\n### Extraction Rules:\n1. **Accuracy**: Extract text values precisely as they appear on the document.\n2. **Line Items**: Parse all individual products or items in the receipt. Compute missing values if necessary.\n3. **Handling Nulls**: If a non-mandatory string field is missing or illegible, output `null` instead of omitting it.\n4. **Dynamic Custom Extra Fields**: If the user text explicitly requests additional custom fields to extract (e.g. categorizing the expense or finding specific identifiers), extract or deduce them and populate them directly into the `custom_extra_fields` map.\n5. **No Preamble**: Return the data strictly using the output schema constraints without extra formatting text.\n\n\nYou are an agent. Your internal name is \"receipt_extractor_agent\".",
+                  "tool_declarations": []
+                }
+              }
+            }
+          },
+          "expected_invocation": {
+            "invocation_id": "",
+            "user_content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "What's the weather like in San Francisco?",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null,
+                  "part_metadata": null
+                }
+              ],
+              "role": "user"
+            },
+            "final_response": null,
+            "intermediate_data": null,
+            "creation_timestamp": 0.0,
+            "rubrics": null,
+            "app_details": null
+          },
+          "eval_metric_results": [
+            {
+              "metric_name": "rubric_based_final_response_quality_v1",
+              "threshold": 0.8,
+              "criterion": {
+                "threshold": 0.8,
+                "judgeModelOptions": {
+                  "judgeModel": "gemini-flash-latest",
+                  "numSamples": 1
+                },
+                "rubrics": [
+                  {
+                    "rubricId": "relevance",
+                    "rubricContent": {
+                      "textProperty": "The response directly addresses the user's query."
+                    }
+                  },
+                  {
+                    "rubricId": "helpfulness",
+                    "rubricContent": {
+                      "textProperty": "The response is helpful and provides useful information."
+                    }
+                  }
+                ]
+              },
+              "custom_function_path": null,
+              "score": null,
+              "eval_status": 3,
+              "details": {
+                "rubric_scores": null
+              }
+            }
+          ]
+        }
+      ],
+      "session_id": "___eval___session___8d2aea6d-5355-4991-8c51-9c6b59190414",
+      "session_details": {
+        "id": "___eval___session___8d2aea6d-5355-4991-8c51-9c6b59190414",
+        "app_name": "app",
+        "user_id": "eval_user",
+        "state": {
+          "__llm_request_key__": "65195f7f-17b6-4f76-8050-ab05e43845de",
+          "extraction_result": {
+            "merchant": {
+              "name": "N/A"
+            },
+            "transaction": {},
+            "financials": {
+              "currency": "N/A",
+              "subtotal": 0.0,
+              "tax_amount": 0.0,
+              "total_amount": 0.0
+            },
+            "payment": {},
+            "line_items": [],
+            "custom_extra_fields": {}
+          }
+        },
+        "events": [
+          {
+            "model_version": null,
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "What's the weather like in San Francisco?",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null,
+                  "part_metadata": null
+                }
+              ],
+              "role": "user"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": null,
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": null,
+            "usage_metadata": null,
+            "live_session_resumption_update": null,
+            "live_session_id": null,
+            "go_away": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": null,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-860a8e12-be7c-437d-b23b-d775d4b35254",
+            "author": "user",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {},
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "6d17b54d-a62c-414e-879c-7ad8a19e52e4",
+            "timestamp": 1777881961.0038345
+          },
+          {
+            "model_version": "gemini-2.5-flash",
+            "content": {
+              "parts": [
+                {
+                  "media_resolution": null,
+                  "code_execution_result": null,
+                  "executable_code": null,
+                  "file_data": null,
+                  "function_call": null,
+                  "function_response": null,
+                  "inline_data": null,
+                  "text": "{\n  \"merchant\": {\n    \"name\": \"N/A\"\n  },\n  \"transaction\": {\n    \"date\": null,\n    \"time\": null,\n    \"invoice_number\": null\n  },\n  \"financials\": {\n    \"currency\": \"N/A\",\n    \"subtotal\": 0.0,\n    \"tax_amount\": 0.0,\n    \"service_charge\": null,\n    \"discount\": null,\n    \"total_amount\": 0.0\n  },\n  \"payment\": {\n    \"method\": null,\n    \"card_last_4\": null\n  },\n  \"line_items\": [],\n  \"custom_extra_fields\": {}\n}",
+                  "thought": null,
+                  "thought_signature": null,
+                  "video_metadata": null,
+                  "tool_call": null,
+                  "tool_response": null,
+                  "part_metadata": null
+                }
+              ],
+              "role": "model"
+            },
+            "grounding_metadata": null,
+            "partial": null,
+            "turn_complete": null,
+            "finish_reason": "STOP",
+            "error_code": null,
+            "error_message": null,
+            "interrupted": null,
+            "custom_metadata": {
+              "__llm_request_key__": "65195f7f-17b6-4f76-8050-ab05e43845de"
+            },
+            "usage_metadata": {
+              "cache_tokens_details": null,
+              "cached_content_token_count": null,
+              "candidates_token_count": 167,
+              "candidates_tokens_details": [
+                {
+                  "modality": "TEXT",
+                  "token_count": 167
+                }
+              ],
+              "prompt_token_count": 740,
+              "prompt_tokens_details": [
+                {
+                  "modality": "TEXT",
+                  "token_count": 740
+                }
+              ],
+              "thoughts_token_count": 41,
+              "tool_use_prompt_token_count": null,
+              "tool_use_prompt_tokens_details": null,
+              "total_token_count": 948,
+              "traffic_type": "ON_DEMAND"
+            },
+            "live_session_resumption_update": null,
+            "live_session_id": null,
+            "go_away": null,
+            "input_transcription": null,
+            "output_transcription": null,
+            "avg_logprobs": -0.08186263809660951,
+            "logprobs_result": null,
+            "cache_metadata": null,
+            "citation_metadata": null,
+            "interaction_id": null,
+            "invocation_id": "e-860a8e12-be7c-437d-b23b-d775d4b35254",
+            "author": "receipt_extractor_agent",
+            "actions": {
+              "skip_summarization": null,
+              "state_delta": {
+                "__llm_request_key__": "65195f7f-17b6-4f76-8050-ab05e43845de",
+                "extraction_result": {
+                  "merchant": {
+                    "name": "N/A"
+                  },
+                  "transaction": {},
+                  "financials": {
+                    "currency": "N/A",
+                    "subtotal": 0.0,
+                    "tax_amount": 0.0,
+                    "total_amount": 0.0
+                  },
+                  "payment": {},
+                  "line_items": [],
+                  "custom_extra_fields": {}
+                }
+              },
+              "artifact_delta": {},
+              "transfer_to_agent": null,
+              "escalate": null,
+              "requested_auth_configs": {},
+              "requested_tool_confirmations": {},
+              "compaction": null,
+              "end_of_agent": null,
+              "agent_state": null,
+              "rewind_before_invocation_id": null,
+              "render_ui_widgets": null
+            },
+            "long_running_tool_ids": null,
+            "branch": null,
+            "id": "d02590e3-a4e0-4bf0-a8e1-b88ff800419c",
+            "timestamp": 1777881961.0070877
+          }
+        ],
+        "last_update_time": 1777881961.0070877
+      },
+      "user_id": "eval_user"
+    }
+  ],
+  "creation_timestamp": 1777881966.089796
+}
