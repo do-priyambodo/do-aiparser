@@ -48,10 +48,11 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: 'projects/${{ vars.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/${{ secrets.WIF_POOL_ID }}/providers/${{ secrets.WIF_PROVIDER_ID }}'
+          workload_identity_provider: 'projects/388889235558/locations/global/workloadIdentityPools/${{ secrets.WIF_POOL_ID }}/providers/${{ secrets.WIF_PROVIDER_ID }}'
           service_account: '${{ secrets.GCP_SERVICE_ACCOUNT }}'
           create_credentials_file: true
-          project_id: ${{ vars.CICD_PROJECT_ID }}
+          project_id: work-mylab-machinelearning
+
 
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v2'
@@ -60,24 +61,27 @@ jobs:
 
       - name: Configure Docker for Artifact Registry
         run: |
-          gcloud auth configure-docker ${{ vars.REGION }}-docker.pkg.dev --quiet
+          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/${{ vars.CONTAINER_NAME }}:${{ github.sha }} \
+          docker build -t us-central1-docker.pkg.dev/work-mylab-machinelearning/cloud-run-source-deploy/do-aiparser:${{ github.sha }} \
             --build-arg COMMIT_SHA=${{ github.sha }} \
             -f apps/backend/Dockerfile \
             apps/backend
-          docker push ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/${{ vars.CONTAINER_NAME }}:${{ github.sha }}
+          docker push us-central1-docker.pkg.dev/work-mylab-machinelearning/cloud-run-source-deploy/do-aiparser:${{ github.sha }}
+
  
       - name: Deploy to Staging (Cloud Run)
         working-directory: apps/backend
         run: |
           uvx google-agents-cli deploy \
-            --project ${{ vars.STAGING_PROJECT_ID }} \
-            --region ${{ vars.REGION }} \
-            --image ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/${{ vars.CONTAINER_NAME }}:${{ github.sha }} \
+            --project work-mylab-machinelearning \
+            --region us-central1 \
+            --image us-central1-docker.pkg.dev/work-mylab-machinelearning/cloud-run-source-deploy/do-aiparser:${{ github.sha }} \
             --update-env-vars ALLOW_ORIGINS="*"
+
 
 
       - name: Fetch Staging Service URL
@@ -114,19 +118,21 @@ jobs:
         working-directory: apps/backend
         run: |
           TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-          gcloud storage cp --recursive tests/load_test/.results gs://${{ vars.LOGS_BUCKET_NAME_STAGING }}/load-test-results/results-${TIMESTAMP} --quiet
+          gcloud storage cp --recursive tests/load_test/.results gs://work-mylab-machinelearning_cloudbuild/load-test-results/results-${TIMESTAMP} --quiet
           echo "_________________________________________________________________________"
-          echo "Load test results copied to gs://${{ vars.LOGS_BUCKET_NAME_STAGING }}/load-test-results/results-${TIMESTAMP}"
-          echo "HTTP link: https://console.cloud.google.com/storage/browser/${{ vars.LOGS_BUCKET_NAME_STAGING }}/load-test-results/results-${TIMESTAMP}"
+          echo "Load test results copied to gs://work-mylab-machinelearning_cloudbuild/load-test-results/results-${TIMESTAMP}"
+          echo "HTTP link: https://console.cloud.google.com/storage/browser/work-mylab-machinelearning_cloudbuild/load-test-results/results-${TIMESTAMP}"
           echo "_________________________________________________________________________"
+
 
       - name: Build and Push Frontend Docker Image
         run: |
-          docker build -t us-central1-docker.pkg.dev/work-mylab-machinelearning/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend:${{ github.sha }} \
+          docker build -t us-central1-docker.pkg.dev/work-mylab-machinelearning/cloud-run-source-deploy/do-aiparser-frontend:${{ github.sha }} \
             --build-arg NEXT_PUBLIC_BACKEND_URL=${{ steps.fetch-url.outputs._staging_url }} \
             -f apps/frontend/Dockerfile \
             apps/frontend
-          docker push us-central1-docker.pkg.dev/work-mylab-machinelearning/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend:${{ github.sha }}
+          docker push us-central1-docker.pkg.dev/work-mylab-machinelearning/cloud-run-source-deploy/do-aiparser-frontend:${{ github.sha }}
+
 
 
       - name: Deploy Frontend to Staging (Cloud Run)
@@ -134,8 +140,9 @@ jobs:
           gcloud beta run deploy do-aiparser-frontend-staging \
             --project work-mylab-machinelearning \
             --region us-central1 \
-            --image us-central1-docker.pkg.dev/work-mylab-machinelearning/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend:${{ github.sha }} \
+            --image us-central1-docker.pkg.dev/work-mylab-machinelearning/cloud-run-source-deploy/do-aiparser-frontend:${{ github.sha }} \
             --allow-unauthenticated
+
 
 
 
