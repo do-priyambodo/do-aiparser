@@ -640,8 +640,9 @@ export default function Home() {
 
       {/* 🏷️ Bottom Apple Sticky Footer */}
       <footer className="h-10 border-t border-zinc-200/60 bg-white/40 text-center flex items-center justify-center text-[10px] text-zinc-400 font-medium">
-        Created and maintained by priyambodo@google.com · All rights reserved © 2026 · v0.1.0
+        Created and maintained by priyambodo@google.com · All rights reserved © 2026 · v2.0.0
       </footer>
+
 
       
     </div>

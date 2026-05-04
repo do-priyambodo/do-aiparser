@@ -57,12 +57,13 @@ artifact_service_uri = f"gs://{logs_bucket_name}" if logs_bucket_name else None
 # Initialize standard ADK FastAPI wrapper application
 app: FastAPI = get_fast_api_app(
     agents_dir=AGENT_DIR,
-    web=True,
+    web=False,
     artifact_service_uri=artifact_service_uri,
     allow_origins=allow_origins if allow_origins != ["*"] else None,
     session_service_uri=session_service_uri,
     otel_to_cloud=True,
 )
+
 
 app.title = "do-aiparser"
 app.description = (
@@ -79,7 +80,29 @@ app.add_middleware(
 )
 
 
+from fastapi import Request
+
+@app.middleware("http")
+async def log_incoming_requests(request: Request, call_next):
+    import time
+    # Log method, URL, and headers to GCP Cloud Logging
+    logger.log_text(f"🚀 [CORS/HTTP Debug] Method: {request.method} | URL: {request.url}", severity="INFO")
+    try:
+        headers_dict = dict(request.headers)
+        logger.log_text(f"📋 [Headers Debug] {json.dumps(headers_dict, indent=2)}", severity="INFO")
+    except Exception as ex:
+        logger.log_text(f"⚠️ Failed to dump request headers: {str(ex)}", severity="WARNING")
+    
+    start_perf = time.perf_counter()
+    response = await call_next(request)
+    latency = time.perf_counter() - start_perf
+    
+    logger.log_text(f"🔄 [Response Debug] Status: {response.status_code} | Latency: {round(latency, 3)}s", severity="INFO")
+    return response
+
+
 # 📁 Custom Multipart Upload & AI Extraction Endpoint
+
 
 
 @app.post("/api/extract")
