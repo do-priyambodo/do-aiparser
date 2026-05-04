@@ -141,7 +141,11 @@ export default function Home() {
       let backendUrl = "http://localhost:8000";
       if (typeof window !== "undefined") {
         const currentOrigin = window.location.origin;
-        if (currentOrigin.includes("-frontend")) {
+        if (currentOrigin.includes("-frontend-prod")) {
+          backendUrl = currentOrigin.replace("-frontend-prod", "");
+        } else if (currentOrigin.includes("-frontend-staging")) {
+          backendUrl = currentOrigin.replace("-frontend-staging", "");
+        } else if (currentOrigin.includes("-frontend")) {
           backendUrl = currentOrigin.replace("-frontend", "");
         } else if (process.env.NEXT_PUBLIC_BACKEND_URL) {
           backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL.startsWith("http")
@@ -149,6 +153,9 @@ export default function Home() {
             : `https://${process.env.NEXT_PUBLIC_BACKEND_URL}`;
         }
       }
+
+
+
 
 
         
