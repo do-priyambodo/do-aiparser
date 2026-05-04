@@ -84,8 +84,9 @@ jobs:
         id: fetch-url
         run: |
           _STAGING_URL=$(gcloud run services describe do-aiparser \
-            --region ${{ vars.REGION }} --project ${{ vars.STAGING_PROJECT_ID }} --format="value(status.url)")
+            --region us-central1 --project work-mylab-machinelearning --format="value(status.url)")
           echo "_staging_url=${_STAGING_URL}" >> $GITHUB_OUTPUT
+
 
 
 
@@ -121,19 +122,21 @@ jobs:
 
       - name: Build and Push Frontend Docker Image
         run: |
-          docker build -t ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend:${{ github.sha }} \
+          docker build -t us-central1-docker.pkg.dev/work-mylab-machinelearning/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend:${{ github.sha }} \
             --build-arg NEXT_PUBLIC_BACKEND_URL=${{ steps.fetch-url.outputs._staging_url }} \
             -f apps/frontend/Dockerfile \
             apps/frontend
-          docker push ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend:${{ github.sha }}
+          docker push us-central1-docker.pkg.dev/work-mylab-machinelearning/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend:${{ github.sha }}
+
 
       - name: Deploy Frontend to Staging (Cloud Run)
         run: |
           gcloud beta run deploy do-aiparser-frontend-staging \
-            --project ${{ vars.STAGING_PROJECT_ID }} \
-            --region ${{ vars.REGION }} \
-            --image ${{ vars.REGION }}-docker.pkg.dev/${{ vars.CICD_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend:${{ github.sha }} \
+            --project work-mylab-machinelearning \
+            --region us-central1 \
+            --image us-central1-docker.pkg.dev/work-mylab-machinelearning/${{ vars.ARTIFACT_REGISTRY_REPO_NAME }}/do-aiparser-frontend:${{ github.sha }} \
             --allow-unauthenticated
+
 
 
   call_production_workflow:
