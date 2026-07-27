@@ -29,8 +29,8 @@ cd apps/backend
 export GOOGLE_APPLICATION_CREDENTIALS=/usr/local/google/home/priyambodo/.config/gcloud/application_default_credentials.json
 export GOOGLE_CLOUD_QUOTA_PROJECT=work-mylab-machinelearning
 
-# Execute the fast_api_app using uv run environment
-PYTHONPATH=. uv run python -m app.fast_api_app 2>&1 | tee server.log &
+# Execute the fast_api_app using local virtual environment python
+PYTHONPATH=. .venv/bin/python -m app.fast_api_app 2>&1 | tee server.log &
 BACKEND_PID=$!
 
 # Wait for background jobs to finish

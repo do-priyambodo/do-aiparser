@@ -148,9 +148,14 @@ export default function Home() {
         } else if (currentOrigin.includes("-frontend")) {
           backendUrl = currentOrigin.replace("-frontend", "");
         } else if (process.env.NEXT_PUBLIC_BACKEND_URL) {
+          const isLocal = process.env.NEXT_PUBLIC_BACKEND_URL.includes("localhost") || 
+                          process.env.NEXT_PUBLIC_BACKEND_URL.includes("127.0.0.1") ||
+                          process.env.NEXT_PUBLIC_BACKEND_URL.startsWith("192.168.") ||
+                          process.env.NEXT_PUBLIC_BACKEND_URL.startsWith("10.") ||
+                          process.env.NEXT_PUBLIC_BACKEND_URL.startsWith("172.");
           backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL.startsWith("http")
             ? process.env.NEXT_PUBLIC_BACKEND_URL
-            : `https://${process.env.NEXT_PUBLIC_BACKEND_URL}`;
+            : `${isLocal ? "http" : "https"}://${process.env.NEXT_PUBLIC_BACKEND_URL}`;
         }
       }
 
